@@ -29,12 +29,17 @@ export function initializeSocket(io) {
                 return;
             }
             socket.join(lobbyCode);
+
+            //When a unity instance connects and createLobby, different lobbies are generated
+            //io.to(lobbyCode).emit makes sure we are only sending to lobby code
             io.to(lobbyCode).emit('lobbyUpdate', {
                 lobbyCode: lobbyCode,
                 players: result.lobby.players
             });
         });
         //---------------------------
+
+        //-------Game----------
 
 
         //------------Disconnect-------------
