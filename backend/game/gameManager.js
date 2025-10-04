@@ -25,7 +25,8 @@ export function createLobby(hostSocketId) {
         lobbyCode: lobbyCode,
         hostSocketId: hostSocketId,
         players: [],
-        gameState: 'JOINING',   
+        gameType: null, // 'TRIVIA' or 'SPEED'
+        gameState: { currentState: GAME_STATES.JOINING }   
     };
 
     // Add the new lobby to our master list
