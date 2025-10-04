@@ -1,59 +1,41 @@
+import { useSocketContext } from './SocketContext.tsx';
 
+export default function Lobby() {
+    const { lobbyCode, playerName, players, setCurrentScreen } = useSocketContext();
 
-interface Player {
-  id: string;
-  name: string;
-}
+    return (
+        <div className="lobby-screen">
+            <div className="lobby-container">
+                <h1>Lobby: {lobbyCode}</h1>
+                
+                {playerName && (
+                    <div className="current-player">
+                        <h2>Welcome, <span className="player-name">{playerName}</span>!</h2>
+                    </div>
+                )}
 
-interface LobbyProps {
-  lobbyCode: string;
-  setLobbyCode: (value: string) => void;
-  playerName: string;
-  setPlayerName: (value: string) => void;
-  players: Player[];
-  handleJoinLobby: () => void;
-}
+                <div className="lobby-info">
+                    <h2>Players in Lobby ({players.length}):</h2>
+                    {players.length > 0 ? (
+                        <ul className="players-list">
+                            {players.map((player) => (
+                                <li key={player.id} className="player-item">
+                                    <span className="player-name-display">{player.name}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p className="no-players">No players in lobby yet</p>
+                    )}
+                </div>
 
-export default function Lobby({
-  lobbyCode,
-  setLobbyCode,
-  playerName,
-  setPlayerName,
-  players,
-  handleJoinLobby
-}: LobbyProps) {
-  return (
-    <div>
-      <h1>Join a Game</h1>
-
-      {playerName && (
-        <div className="current-player">
-          <h2>Current Player: <span className="player-name">{playerName}</span></h2>
+                <button 
+                    onClick={() => setCurrentScreen('join')} 
+                    className="back-button"
+                >
+                    Back to Join
+                </button>
+            </div>
         </div>
-      )}
-
-      <input
-        type="text"
-        placeholder="Your Name"
-        value={playerName}
-        onChange={(e) => setPlayerName(e.target.value)}
-      />
-      <input
-        type="text"
-        placeholder="Lobby Code"
-        value={lobbyCode}
-        onChange={(e) => setLobbyCode(e.target.value)}
-      />
-      <button onClick={handleJoinLobby}>Join Lobby</button>
-
-      <div>
-        <h2>Players in Lobby:</h2>
-        <ul>
-          {players.map((p) => (
-            <li key={p.id}>{p.name}</li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  );
+    );
 }
