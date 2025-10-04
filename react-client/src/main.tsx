@@ -1,10 +1,13 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import App from './App.tsx'
+import SocketContext from './SocketContext.tsx'
+import TopNavbar from './TopNavbar.tsx'
+import Lobby from './Lobby.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <TopNavbar />
+    <SocketContext />
   </StrictMode>,
 )

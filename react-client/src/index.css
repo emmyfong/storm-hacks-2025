@@ -28,6 +28,39 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  padding-top: 60px; /* Account for fixed navbar */
+}
+
+.main-content {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.current-player {
+  background: rgba(139, 92, 246, 0.1);
+  border: 2px solid rgba(139, 92, 246, 0.3);
+  border-radius: 12px;
+  padding: 15px 20px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.current-player h2 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 1.2rem;
+}
+
+.player-name {
+  color: #8b5cf6;
+  font-weight: 700;
+  background: linear-gradient(45deg, #8b5cf6, #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 h1 {
