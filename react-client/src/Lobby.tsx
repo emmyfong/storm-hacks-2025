@@ -1,5 +1,4 @@
-import React from 'react';
-import SocketContext from './SocketContext.tsx';
+
 
 interface Player {
   id: string;
