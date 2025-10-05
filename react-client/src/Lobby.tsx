@@ -1,4 +1,5 @@
 import { useSocketContext } from './SocketContext.tsx';
+import './css/Lobby.css';
 
 export default function Lobby() {
     const { lobbyCode, playerName, players, setCurrentScreen } = useSocketContext();

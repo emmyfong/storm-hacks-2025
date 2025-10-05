@@ -1,5 +1,5 @@
 import React from 'react';
-import './TopNavbar.css';
+import './css/TopNavbar.css';
 
 interface TopNavbarProps {
   playerName?: string;

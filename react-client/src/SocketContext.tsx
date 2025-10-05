@@ -16,8 +16,9 @@ export interface SocketContextType {
     setLobbyCode: (code: string) => void;
     players: Player[];
     joinLobby: () => void;
-    currentScreen: 'join' | 'lobby';
-    setCurrentScreen: (screen: 'join' | 'lobby') => void;
+    currentScreen: 'join' | 'lobby' | 'input';
+    setCurrentScreen: (screen: 'join' | 'lobby' | 'input') => void;
+    gameState: string;
 }
 
 // Create context for socket
@@ -32,7 +33,8 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     const [lobbyCode, setLobbyCode] = useState<string>('');
     const [playerName, setPlayerName] = useState<string>('');
     const [players, setPlayers] = useState<Player[]>([]);
-    const [currentScreen, setCurrentScreen] = useState<'join' | 'lobby'>('join');
+    const [currentScreen, setCurrentScreen] = useState<'join' | 'lobby' | 'input'>('join');
+    const [gameState, setGameState] = useState<string>('');
     
     useEffect(() => {
         // **Create the connection only once when the component mounts**
@@ -59,6 +61,16 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
             alert(`Error: ${data.message}`);
         });
 
+        newSocket.on('gameStateChange', (data: { state: string }) => {
+            console.log('Game state changed to:', data.state);
+            setGameState(data.state);
+            
+            // Switch to input screen when state is PROMPT
+            if (data.state === 'PROMPT') {
+                setCurrentScreen('input');
+            }
+        });
+
         // **Clean up the connection when the component unmounts**
         return () => {
             newSocket.disconnect();
@@ -72,7 +84,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     return (
-        <SocketContext.Provider value={{ socket, playerName, setPlayerName, lobbyCode, setLobbyCode, players, joinLobby, currentScreen, setCurrentScreen }}>
+        <SocketContext.Provider value={{ socket, playerName, setPlayerName, lobbyCode, setLobbyCode, players, joinLobby, currentScreen, setCurrentScreen, gameState }}>
             {children}
         </SocketContext.Provider>
     );
