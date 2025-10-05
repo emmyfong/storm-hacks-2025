@@ -27,25 +27,25 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  padding-top: 60px; /* Account for fixed navbar */
+  padding-top: 60px;
 }
 
 .main-content {
-  width: 50vw;
-  height: calc(100vh - 60px);
-  min-width: 400px;
-  min-height: 500px;
+  min-width: unset;
+  min-height: unset;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .main-screen {
+  width: 500px;
+  height: 800px;
+  max-width: 500px;
   background-image: url('../assets/Center_Background.png');
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: center;
-
   display: flex;
   justify-content: center;
   align-items: center;
@@ -86,61 +86,16 @@ body {
 
 .text-input {
   width: 100%;
-  padding: 1.5vh 2vw;
+  padding: 2vh 2vw;
   border: none;
   outline: none; 
   background: transparent; 
   box-sizing: border-box;
   margin-top: 1vh;
-
   font-family: inherit;
-  font-size: max(1.5vw, 16px);
-}
-
-.join-input:focus {
-  outline: none;
-  border-color: #8b5cf6;
-  background: rgba(139, 92, 246, 0.15);
-}
-
-.join-input::placeholder {
-  color: #a0a0a0;
-}
-
-.join-button {
-  font-family: inherit;
-  width: 100%;
-  padding: 4vh 6vw;
-  background: linear-gradient(45deg, #8b5cf6, #a855f7);
-  border: none;
-  border-radius: 2vw;
-  color: #ffffff;
-  font-size: max(1.8vw, 18px);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  margin-top: 2vh;
-  overflow: visible;
-  min-height: 12vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  background-image: url('../assets/Button.png');
-  background-size: 50% 100%;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
-.join-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
-}
-
-.join-button:disabled {
-  opacity: 0.75;
-  cursor: not-allowed;
-  transform: none;
+  font-size: max(1.5vw, 18px);
+  text-align: center;
+  color: #333
 }
 
 
