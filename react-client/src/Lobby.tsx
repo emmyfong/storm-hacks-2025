@@ -36,7 +36,7 @@ export default function Lobby() {
                         <ul className="players-list">
                             {players.map((player) => (
                                 <li key={player.id} className="player-item">
-                                    <span className="player-name-display">{player.name}</span>
+                                    <span className="player-name-display">{player.name} - HP: {player.health}</span>
                                 </li>
                             ))}
                         </ul>

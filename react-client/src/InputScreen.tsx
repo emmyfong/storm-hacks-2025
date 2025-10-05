@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useSocketContext } from './SocketContext.tsx';
 import './css/InputScreen.css';
+import './css/main.css';
 
 export default function InputScreen() {
     const { submitPrompt } = useSocketContext();
@@ -16,14 +17,14 @@ export default function InputScreen() {
 
     if (submitted){
         return (
-            <div className="input-screen">
+            <div className="main-screen">
                 <h2>Thanks! Waiting for other players...</h2>
             </div>
         )
     }
 
     return (
-        <div className="input-screen">
+        <div className="main-screen">
             <div className="input-container">
                 
                 <div className="input-group">

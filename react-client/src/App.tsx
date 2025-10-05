@@ -2,6 +2,7 @@ import TopNavbar from './TopNavbar'
 import JoinScreen from './JoinScreen'
 import Lobby from './Lobby'
 import InputScreen from './InputScreen'
+import TriviaScreen from './TriviaScreen'
 
 import { useSocketContext } from './SocketContext'
 
@@ -16,6 +17,11 @@ export default function App() {
         return <Lobby />;
       case 'input':
         return <InputScreen />;
+      case 'choice':
+        return <TriviaScreen />;
+      case 'reward':
+        return <TriviaScreen />;
+      case 'endgame':
       default:
         return <JoinScreen />;
     }

@@ -58,3 +58,13 @@
 .trivia-button:hover:not(:disabled) {
   transform: scale(1.05);
 }
+
+.result-text {
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+.result-text.visible {
+    opacity: 1;
+    transform: scale(1);
+}

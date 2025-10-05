@@ -82,13 +82,28 @@
 }
 
 .back-button {
-  color: #8b5cf6;
-  padding: 10px 20px;
-  border-radius: 8px;
+  font-family: inherit;
+  width: 100%;
+  padding: 4vh 6vw;
+  background: linear-gradient(45deg, #8b5cf6, #a855f7);
+  border: none;
+  border-radius: 2vw;
+  color: #ffffff;
+  font-size: max(1.8vw, 18px);
+  font-weight: 600;
   cursor: pointer;
-  font-weight: 500;
   transition: all 0.2s ease;
-  margin-top: 20px;
+  margin-top: 2vh;
+  overflow: visible;
+  min-height: 12vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-image: url('../assets/Button.png');
+  background-size: 50% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .back-button:hover {

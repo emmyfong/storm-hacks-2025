@@ -2,8 +2,9 @@
 import * as gameManager from './gameManager.js';
 import { generateTriviaQuestion } from '../services/gemini.js';
 
-const ROUND_TIMER_SECONDS = 20;
-const REWARD_PHASE_SECONDS = 10;
+const ROUND_TIMER_SECONDS = 60;
+const PROMPT_PHASE_SECONDS = 60;
+const REWARD_PHASE_SECONDS = 20;
 
 export function initializeSocket(io) {
     const clearLobbyTimer = (lobbyCode) => {
@@ -51,7 +52,7 @@ export function initializeSocket(io) {
         //-------Game----------
         socket.on('startGame', ({ lobbyCode }) => {
             const { lobby } = gameManager.startGame(lobbyCode);
-            io.to(lobbyCode).emit('gameStateChange', { state: 'PROMPT', lobbyState: lobby.gameState, timer: ROUND_TIMER_SECONDS });
+            io.to(lobbyCode).emit('gameStateChange', { state: 'PROMPT', lobbyState: lobby.gameState, timer: PROMPT_PHASE_SECONDS });
 
             const timerId = setTimeout(() => handlePromptPhaseEnd(lobbyCode), ROUND_TIMER_SECONDS * 1000);
             gameManager.setLobbyTimer(lobbyCode, timerId); 
@@ -117,23 +118,42 @@ export function initializeSocket(io) {
         }
 
         function startNextRound(lobbyCode) {
+            // This function from gameManager now decides the true next state
             const { lobby } = gameManager.startNextTriviaRound(lobbyCode);
+            const currentState = lobby.gameState.currentState;
 
-            if (lobby.gameState.currentState === 'ENDGAME') {
-                io.to(lobbyCode).emit('gameStateChange', { state: 'ENDGAME', winner: lobby.winner, players: lobby.players });
-                return;
+            switch (currentState) {
+                case 'TRIVIA':
+                    io.to(lobbyCode).emit('gameStateChange', {
+                        state: 'TRIVIA',
+                        question: lobby.gameState.question,
+                        options: lobby.gameState.options,
+                        players: lobby.players,
+                        timer: PROMPT_PHASE_SECONDS
+                    });
+                    const triviaTimerId = setTimeout(() => handleTriviaPhaseEnd(lobbyCode), ROUND_TIMER_SECONDS * 1000);
+                    gameManager.setLobbyTimer(lobbyCode, triviaTimerId);
+                    break;
+                
+                case 'PROMPT':
+                    // We need to reprompt
+                    io.to(lobbyCode).emit('gameStateChange', {
+                        state: 'PROMPT',
+                        players: lobby.players,
+                        timer: ROUND_TIMER_SECONDS
+                    });
+                    const promptTimerId = setTimeout(() => handlePromptPhaseEnd(lobbyCode), ROUND_TIMER_SECONDS * 1000);
+                    gameManager.setLobbyTimer(lobbyCode, promptTimerId);
+                    break;
+
+                case 'ENDGAME':
+                    io.to(lobbyCode).emit('gameStateChange', {
+                        state: 'ENDGAME',
+                        winner: lobby.winner,
+                        players: lobby.players
+                    });
+                    break;
             }
-            
-            io.to(lobbyCode).emit('gameStateChange', {
-                state: 'TRIVIA',
-                question: lobby.gameState.question,
-                options: lobby.gameState.options,
-                players: lobby.players,
-                timer: ROUND_TIMER_SECONDS
-            });
-
-            const timerId = setTimeout(() => handleTriviaPhaseEnd(lobbyCode), ROUND_TIMER_SECONDS * 1000);
-            gameManager.setLobbyTimer(lobbyCode, timerId);
         }
 
         function handleTriviaPhaseEnd(lobbyCode) {
