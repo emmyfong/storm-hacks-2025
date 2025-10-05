@@ -3,15 +3,24 @@ import { useSocketContext } from './SocketContext.tsx';
 import './css/InputScreen.css';
 
 export default function InputScreen() {
-    const { socket } = useSocketContext();
+    const { submitPrompt } = useSocketContext();
     const [userInput, setUserInput] = useState<string>('');
+    const [submitted, setSubmitted] = useState<boolean>(false);
 
     const handleSubmit = () => {
-        if (socket && userInput.trim()) {
-            socket.emit('submitPrompt', { input: userInput.trim() });
-            setUserInput(''); // Clear input after sending
+        if (userInput.trim() && !submitted) {
+            submitPrompt(userInput.trim());
+            setSubmitted(true); // Clear input after sending
         }
     };
+
+    if (submitted){
+        return (
+            <div className="input-screen">
+                <h2>Thanks! Waiting for other players...</h2>
+            </div>
+        )
+    }
 
     return (
         <div className="input-screen">

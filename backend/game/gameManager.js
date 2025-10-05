@@ -62,6 +62,25 @@ export function joinLobby(lobbyCode, playerId, playerName) {
     return { lobby: lobby };
 }
 
+export function getLobby(lobbyCode) {
+    return lobbies.get(lobbyCode);
+}
+
+export function setLobbyTimer(lobbyCode, timerId) {
+    const lobby = lobbies.get(lobbyCode);
+    if (lobby) {
+        lobby.gameState.timerId = timerId;
+    }
+}
+
+export function getAllPrompts(lobbyCode) {
+    const lobby = lobbies.get(lobbyCode);
+    if (lobby && lobby.gameState.promptSubmissions) {
+        return { prompts: lobby.gameState.promptSubmissions.map(p => p.promptText) };
+    }
+    return { prompts: [] };
+}
+
 //////////Game Flow Functions//////////
 //start a specific game type in the lobby
 export function startGame(lobbyCode, gameType = 'TRIVIA') {
