@@ -2,10 +2,13 @@ import React from 'react';
 import './css/TopNavbar.css';
 import { useSocketContext } from './SocketContext.tsx';
 
-interface TopNavbarProps {}
 
-const TopNavbar: React.FC<TopNavbarProps> = () => {
-  const { lobbyCode, playerName} = useSocketContext();
+const TopNavbar: React.FC = () => {
+  const { lobbyCode, playerName, setCurrentScreen } = useSocketContext();
+
+  const handleHomeClick = () => {
+    setCurrentScreen('join');
+  };
 
   return (
     <nav className="top-navbar">
@@ -16,8 +19,8 @@ const TopNavbar: React.FC<TopNavbarProps> = () => {
         </div>
 
         {/* Center - Game Info */}
-        <div className="navbar-center">
-        <h1 className="navbar-title">Witch Dog</h1>
+        <div className="navbar-center" onClick={handleHomeClick} style={{ cursor: 'pointer' }}>
+          <h1 className="navbar-title">Witch Dog</h1>
         </div>
 
         {/* Right side - Player Info & Actions */}

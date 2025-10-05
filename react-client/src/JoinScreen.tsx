@@ -1,9 +1,16 @@
+import { useState } from 'react';
 import { useSocketContext } from './SocketContext.tsx';
 import './css/JoinScreen.css'
 import './css/main.css'
 
 export default function JoinScreen() {
-    const { socket, lobbyCode, setLobbyCode, playerName, setPlayerName, joinLobby } = useSocketContext();
+    const { socket, playerName, setPlayerName, joinLobby } = useSocketContext();
+
+    const [inputCode, setInputCode] = useState('');
+
+    const handleJoin = () => {
+        joinLobby(inputCode);
+    };
 
     return (
         <div className="main-screen">
@@ -25,15 +32,15 @@ export default function JoinScreen() {
                         id="lobbyCode"
                         type="text"
                         placeholder="Enter lobby code"
-                        value={lobbyCode}
-                        onChange={(e) => setLobbyCode(e.target.value.toUpperCase())}
+                        value={inputCode}
+                        onChange={(e) => setInputCode(e.target.value.toUpperCase())}
                         className="text-input"
                     />
                 </div>
 
                 <button 
-                    onClick={joinLobby} 
-                    disabled={!socket || !playerName || !lobbyCode}
+                    onClick={handleJoin} 
+                    disabled={!socket || !playerName || !inputCode}
                     className="join-button"
                 >
                     Join Lobby

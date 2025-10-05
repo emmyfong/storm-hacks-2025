@@ -3,6 +3,7 @@ import JoinScreen from './JoinScreen'
 import Lobby from './Lobby'
 import InputScreen from './InputScreen'
 import TriviaScreen from './TriviaScreen'
+import EndScreen from './EndScreen'
 
 import { useSocketContext } from './SocketContext'
 
@@ -22,6 +23,7 @@ export default function App() {
       case 'reward':
         return <TriviaScreen />;
       case 'endgame':
+        return <EndScreen />;
       default:
         return <JoinScreen />;
     }
