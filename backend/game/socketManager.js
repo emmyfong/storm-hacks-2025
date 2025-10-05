@@ -51,11 +51,12 @@ export function initializeSocket(io) {
         //-------Game----------
         socket.on('startGame', ({ lobbyCode }) => {
             const { lobby } = gameManager.startGame(lobbyCode);
-            io.to(lobbyCode).emit('gameStateChange', { state: 'PROMPT', lobbyState: lobby.gameState });
+            io.to(lobbyCode).emit('gameStateChange', { state: 'PROMPT', lobbyState: lobby.gameState, timer: ROUND_TIMER_SECONDS });
 
             const timerId = setTimeout(() => handlePromptPhaseEnd(lobbyCode), ROUND_TIMER_SECONDS * 1000);
             gameManager.setLobbyTimer(lobbyCode, timerId); 
         });
+
         socket.on('submitPrompt', ({ lobbyCode, promptText }) => {
             const { lobby } = gameManager.recordPrompt(lobbyCode, socket.id, promptText);
             //emit update to show who submitted
@@ -127,7 +128,8 @@ export function initializeSocket(io) {
                 state: 'TRIVIA',
                 question: lobby.gameState.question,
                 options: lobby.gameState.options,
-                players: lobby.players
+                players: lobby.players,
+                timer: ROUND_TIMER_SECONDS
             });
 
             const timerId = setTimeout(() => handleTriviaPhaseEnd(lobbyCode), ROUND_TIMER_SECONDS * 1000);
@@ -142,7 +144,8 @@ export function initializeSocket(io) {
                 state: 'REWARD',
                 results: results,
                 solutionIndex: lobby.gameState.solutionIndex,
-                players: lobby.players
+                players: lobby.players,
+                timer: REWARD_PHASE_SECONDS
             });
             
             if (lobby.gameState.currentState === 'ENDGAME') {
