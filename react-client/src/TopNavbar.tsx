@@ -1,44 +1,28 @@
 import React from 'react';
 import './css/TopNavbar.css';
+import { useSocketContext } from './SocketContext.tsx';
 
-interface TopNavbarProps {
-  playerName?: string;
-  lobbyCode?: string;
-  playerCount?: number;
-}
+interface TopNavbarProps {}
 
-const TopNavbar: React.FC<TopNavbarProps> = ({ 
-  playerName, 
-  lobbyCode, 
-  playerCount 
-}) => {
+const TopNavbar: React.FC<TopNavbarProps> = () => {
+  const { lobbyCode, playerName} = useSocketContext();
+
   return (
     <nav className="top-navbar">
-      <div className="navbar-container">
+      <div className="navbar-container"> 
         {/* Left side - Logo/Title */}
         <div className="navbar-left">
-          <h1 className="navbar-title">Witch Dog</h1>
+          <h1 className="navbar-title">{playerName}</h1>
         </div>
 
         {/* Center - Game Info */}
         <div className="navbar-center">
-          {lobbyCode && (
-            <div className="game-info">
-              <span className="lobby-code">Lobby: {lobbyCode}</span>
-              {playerCount !== undefined && (
-                <span className="player-count">({playerCount} players)</span>
-              )}
-            </div>
-          )}
+        <h1 className="navbar-title">Witch Dog</h1>
         </div>
 
         {/* Right side - Player Info & Actions */}
         <div className="navbar-right">
-          {playerName && (
-            <div className="player-info">
-              <span className="player-name">Welcome, {playerName}</span>
-            </div>
-          )}
+          <h1 className="navbar-title">Room Code: {lobbyCode}</h1>
         </div>
       </div>
     </nav>

@@ -26,7 +26,7 @@ export default function Lobby() {
                 
                 {playerName && (
                     <div className="current-player">
-                        <h2>Welcome, <span className="player-name">{playerName}</span>!</h2>
+                        <h2>Welcome, {playerName}</h2>
                     </div>
                 )}
 
