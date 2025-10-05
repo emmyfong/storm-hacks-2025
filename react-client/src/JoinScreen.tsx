@@ -8,39 +8,14 @@ export default function JoinScreen() {
     const [inputCode, setInputCode] = useState('');
 
     // Function to re-center the screen
-    const recenterView = () => {
-        // Force a layout recalculation
-        requestAnimationFrame(() => {
-            // Center horizontally and vertically
-            const screenWidth = window.innerWidth;
-            window.scrollTo({
-                top: 0,
-                left: screenWidth / 2,
-                behavior: 'smooth'
-            });
-            // Additional check to ensure we're centered after a short delay
-            setTimeout(() => {
-                const container = document.querySelector('.main-screen');
-                if (container) {
-                    container.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'center',
-                        inline: 'center'
-                    });
-                }
-            }, 100);
-        });
-    };
-
-    // Handle input focus and blur
-    const handleFocusBlur = () => {
-        // Small delay to let keyboard hide
-        setTimeout(recenterView, 100);
+    const handleFocusBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+        e.target.blur(); // Dismiss keyboard
+        window.scrollTo(0, 0); // Reset scroll position instantly
     };
 
     const handleJoin = () => {
         joinLobby(inputCode);
-        recenterView();
+        window.scrollTo(0, 0);
     };
 
     return (
