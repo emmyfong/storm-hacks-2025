@@ -21,17 +21,19 @@ export default function ChatModal() {
 
 return (
     <>
-      <button className="modal-button" onClick={toggleModal}>Talk</button>
-
+      <div className="button-container">
+        <button onClick={toggleModal}>Talk</button>
+      </div>
+      
       {modal && (
         <div className="modal">
           <div onClick={toggleModal} className="overlay"></div>
           <div className="modal-content">
             <h2>Talk</h2>
-            <form className="chat-form" onSubmit={handleSendMessage}>
+            <form className="input-group" onSubmit={handleSendMessage}>
               <input
                 type="text"
-                className="chat-input"
+                className="text-input"
                 placeholder="Type a message..."
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}

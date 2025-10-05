@@ -41,7 +41,6 @@ export default function JoinScreen() {
                 <button 
                     onClick={handleJoin} 
                     disabled={!socket || !playerName || !inputCode}
-                    className="join-button"
                 >
                     Join Lobby
                 </button>
