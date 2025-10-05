@@ -85,7 +85,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         return () => {
             newSocket.disconnect();
         };
-    }, [serverUrl, players]);
+    }, [serverUrl]);
 
     const joinLobby = () => {
         if (socket && playerName && lobbyCode) {

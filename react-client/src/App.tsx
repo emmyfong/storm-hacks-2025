@@ -8,6 +8,7 @@ export default function App() {
   const { currentScreen } = useSocketContext();
 
   const renderCurrentScreen = () => {
+    // UPDATED: Add the new cases for the game loop
     switch (currentScreen) {
       case 'join':
         return <JoinScreen />;
@@ -15,6 +16,9 @@ export default function App() {
         return <Lobby />;
       case 'input':
         return <InputScreen />;
+      case 'choice':
+      case 'reward':
+      case 'endgame':
       default:
         return <JoinScreen />;
     }
