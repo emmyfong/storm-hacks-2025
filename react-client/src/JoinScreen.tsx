@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useSocketContext } from './SocketContext.tsx';
 import './css/JoinScreen.css'
 import './css/main.css'
