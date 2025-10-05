@@ -1,5 +1,4 @@
 import { useSocketContext } from './SocketContext.tsx';
-import './css/JoinScreen.css'
 import './css/main.css'
 
 export default function JoinScreen() {
@@ -34,7 +33,6 @@ export default function JoinScreen() {
                 <button 
                     onClick={joinLobby} 
                     disabled={!socket || !playerName || !lobbyCode}
-                    className="join-button"
                 >
                     Join Lobby
                 </button>

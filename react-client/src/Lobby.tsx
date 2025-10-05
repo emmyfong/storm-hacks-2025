@@ -2,10 +2,11 @@ import { useSocketContext } from './SocketContext.tsx';
 import './css/Lobby.css';
 import './css/main.css';
 
-/*export interface Player {
+export interface Player {
     id: string;
     name: string;
-}*/
+    health: number;
+}
 
 export default function Lobby() {
     const { lobbyCode, playerName, players, setCurrentScreen } = useSocketContext();
@@ -13,10 +14,10 @@ export default function Lobby() {
     const lobbyCode: string = '1234';
     const playerName: string = 'Keira';
     const players: Player[] = [
-        { id: '1', name: 'Keira' },
-        { id: '2', name: 'Emmy' },
-        { id: '3', name: 'Sophia' },
-        { id: '4', name: 'Evan' },
+        { id: '1', name: 'Keira', health: 4},
+        { id: '2', name: 'Emmy', health: 4 },
+        { id: '3', name: 'Sophia', health:  4 },
+        { id: '4', name: 'Evan', health: 4 },
       ];*/
 
     return (
@@ -47,7 +48,6 @@ export default function Lobby() {
 
                 <button 
                     onClick={() => setCurrentScreen('join')} 
-                    className="back-button"
                 >
                     Back to Join
                 </button>

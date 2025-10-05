@@ -18,14 +18,14 @@ export default function InputScreen() {
     if (submitted){
         return (
             <div className="main-screen">
-                <h2>Thanks! Waiting for other players...</h2>
+                <h2>Waiting for other players...</h2>
             </div>
         )
     }
 
     return (
         <div className="main-screen">
-            <div className="input-container">
+            <div className="input-screen-container">
                 
                 <div className="input-group">
                     <input
@@ -34,17 +34,16 @@ export default function InputScreen() {
                         onChange={(e) => setUserInput(e.target.value)}
                         placeholder="Enter A Category"
                         maxLength={30}
-                        className="input-field"
+                        className="text-input"
                         autoFocus
                     />
-                    <button 
+                </div>
+                <button 
                         onClick={handleSubmit}
                         disabled={!userInput.trim()}
-                        className="submit-button"
                     >
                         Submit
                     </button>
-                </div>
             </div>
         </div>
     );

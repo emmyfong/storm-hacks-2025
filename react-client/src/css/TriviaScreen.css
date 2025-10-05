@@ -1,14 +1,32 @@
 /* TriviaScreen.css */
 
-.trivia-container {
-  padding: 4rem 0.5rem 0.5rem 0.5rem;
-  text-align: center;
+.trivia-layout {
+  padding: 6rem 0.5rem 1rem 1rem;
   color: #fff;
 }
 
+.result-screen {
+  width: 500px;
+  height: 800px;
+  max-width: 500px;
+  background-image: url('../assets/Center_Background.png');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+}
+
 .trivia-question {
-  margin: 2rem 0;
-  color: #2c2c2c;
+  margin: 0rem 0;
+  color: white;
+  padding-left: 10%;
+  padding-right: 10%;
+  font-size: 2vh;
+  text-align: center;
 }
 
 .trivia-buttons {
@@ -21,7 +39,7 @@
 
 .trivia-button {
   position: relative;
-  font-size: 1.2rem;
+  font-size: 2vh;
   background-color: transparent;
   border: none;
   border-radius: 10px;
@@ -30,8 +48,8 @@
   max-width: 380px;
   aspect-ratio: 5 / 1.5;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: right;
+  align-items: right;
   padding-left: 0;
   transition: transform 0.2s;
   box-sizing: border-box;
@@ -47,11 +65,11 @@
 }
 
 .trivia-button span {
-  padding: 0.4rem 0.8rem;
+  padding: 0.4rem 0rem;
   border-radius: 5px;
   font-weight: bold;
   display: inline-block;
-  text-align: center;
+  text-align: right;
   color: black;
 }
 

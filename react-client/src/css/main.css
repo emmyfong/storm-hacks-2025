@@ -39,9 +39,9 @@ body {
 }
 
 .main-screen {
-  width: 500px;
-  height: 800px;
+  width: 80vw;
   max-width: 500px;
+  aspect-ratio: 5 / 8;
   background-image: url('../assets/Center_Background.png');
   background-size: 100% 100%;
   background-repeat: no-repeat;
@@ -63,11 +63,6 @@ body {
 .input-group {
   margin-bottom: 2vh;
   text-align: left;
-  background-image: url('../assets/Text_Input.png');
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-  background-position: center;
-  padding: 20px;
   border-radius: 15px;
   min-height: 80px;
   display: flex;
@@ -75,14 +70,23 @@ body {
   justify-content: center;
 }
 
-.input-group label {
-  font-family: inherit;
-  display: block;
-  color: #ffffff;
-  margin-bottom: 1vh;
-  font-weight: 500;
-  font-size: max(1.2vw, 14px);
+.input-group input {
+  width: 100%;
+  border: none;
+  outline: none;
+  height: 80px;
+  border-radius: 15px;
+  
+  /* background image inside the input */
+  background-image: url('../assets/Text_Input.png');
+  background-size: 60% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  
+  padding-left: 30%; /* space for text inside the image */
+  padding-right: 30%;
 }
+
 
 .text-input {
   width: 100%;
@@ -93,47 +97,42 @@ body {
   box-sizing: border-box;
   margin-top: 1vh;
   font-family: inherit;
-  font-size: max(1.5vw, 18px);
+  font-size: 2vh;
   text-align: center;
   color: #333
 }
 
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  width: 100%;
+  padding: 4vh 6vw;
+  background: transparent;
+  border: none;
+  border-radius: 2vw;
+  font-size: 1.8vh;
+  font-weight: 600;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin-top: 2vh;
+  overflow: visible;
+  min-height: 12vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-image: url('../assets/Button.png');
+  background-size: 70% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 button:hover {
-  border-color: #646cff;
+  transform: translateY(-3px);
 }
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+button:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+  transform: none;
 }
 
 @font-face {

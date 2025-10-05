@@ -11,20 +11,24 @@ export default function ChatModal() {
 
     return (
         <>
-          <button className="modal-button" onClick={toggleModal}>
+          <div className="button-container">
+            <button className="modal-button" onClick={toggleModal}>
             Talk
           </button>
+          </div>
+
+          
     
           {modal && (
             <div className="modal">
               <div onClick={toggleModal} className="overlay"></div>
               <div className="modal-content">
-                <h2>Talk</h2>
+                <h1>Talk</h1>
     
-                <form className="chat-form">
+                <div className="input-group">
                   <input
                     type="text"
-                    className="chat-input"
+                    className="text-input"
                     placeholder="Type a message..."
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
@@ -32,7 +36,7 @@ export default function ChatModal() {
                   <button type="submit" className="chat-send-button">
                     Send
                   </button>
-                </form>
+                </div>
     
                 <button onClick={toggleModal} className="chat-back-button">
                   Back
