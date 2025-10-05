@@ -19,6 +19,7 @@ export interface SocketContextType {
     currentScreen: 'join' | 'lobby' | 'input';
     setCurrentScreen: (screen: 'join' | 'lobby' | 'input') => void;
     gameState: string;
+    submitPrompt: (promptText: string) => void;
 }
 
 // Create context for socket
@@ -75,7 +76,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         return () => {
             newSocket.disconnect();
         };
-    }, []);
+    }, [serverUrl]);
 
     const joinLobby = () => {
         if (socket && playerName && lobbyCode) {
@@ -83,13 +84,20 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
+    const submitPrompt = (promptText: string) => {
+        if (socket && lobbyCode) {
+            socket.emit('submitPrompt', { lobbyCode, promptText });
+        }
+    };
+
     return (
-        <SocketContext.Provider value={{ socket, playerName, setPlayerName, lobbyCode, setLobbyCode, players, joinLobby, currentScreen, setCurrentScreen, gameState }}>
+        <SocketContext.Provider value={{ socket, playerName, setPlayerName, lobbyCode, setLobbyCode, players, joinLobby, currentScreen, setCurrentScreen, gameState, submitPrompt }}>
             {children}
         </SocketContext.Provider>
     );
 }
 
+/* eslint-disable react-refresh/only-export-components */
 // Hook to use context
 export const useSocketContext = () => {
     const context = useContext(SocketContext);
