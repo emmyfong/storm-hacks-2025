@@ -1,5 +1,5 @@
 // TriviaScreen.tsx
-import React, { useState } from 'react';
+import { useState } from 'react';
 // import { useSocketContext } from './SocketContext.tsx'; // commented out for now
 import './css/TriviaScreen.css';
 
