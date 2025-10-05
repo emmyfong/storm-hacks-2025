@@ -13,6 +13,19 @@
     align-items: center;
     margin-bottom: 2vh;
     width: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+/* Prevent scroll issues on iOS */
+@supports (-webkit-touch-callout: none) {
+    .input-group input {
+        font-size: 16px !important;
+    }
+    
+    .input-container {
+        padding: min(60px, 15vw);
+    }
 }
 
 @media (max-width: 480px) {
