@@ -2,24 +2,27 @@
 
 import { GoogleGenAI } from "@google/genai";
 import * as dotenv from 'dotenv';
-dotenv.config();
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const gemini = new GoogleGenAI(process.env.GEMINI_API_KEY);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
+
+const gemini = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 //Generate Trivia Question based on user prompts
 //Return format: [question, optionA, optionB, optionC, optionD, correctOptionString]
-export async function generativeTriviaQuestion(userPrompt) {
+export async function generateTriviaQuestion(userPrompt) {
     try {
-        const model = gemini.getGenerativeModel({ model: "gemini-2.5-flash"});
-
         //prompt engineering
         const engineerPrompt = `
-            You are a whimsical magical shiba wizard host of a trivia game called Witch Dog, a multiplayer party game
+            You are a machine that only outputs JSON. Do not include any conversational text, greetings, or explanations.
 
             Based on the following topic, create a medium level, unique and engaging trivia question with four plausible answer options. One option must be correct. The question's difficulty should be hard enough that only 25% of people can solve it. 
 
-            Your response MUST be a valid JSON array of strings, with exactly 6 elements, following this exact format:
-            ["question", "optionA", "optionB", "optionC", "optionD", "correctAnswerString"]
+            Your entire response must be a single, valid JSON array of strings with exactly 6 elements.
+            The array must follow this format: ["question", "optionA", "optionB", "optionC", "optionD", "correctAnswerString"]
 
             The last element in the array MUST be the string that exactly matches the correct answer option. Do NOT add any extra explanation or formatting
 
@@ -29,14 +32,31 @@ export async function generativeTriviaQuestion(userPrompt) {
             Now, generate a trivia question for this topic: "${userPrompt}
         `;
 
-        const result = await model.generateContent(engineerPrompt);
-        const response = result.response();
-        const text = response.text();
+        const result = await gemini.models.generateContent({
+            model: "gemini-2.0-flash-lite",
+            contents: [{ role: "user", parts: [{ text: engineerPrompt }] }],
+            generationConfig: {
+                responseMimeType: "application/json",
+            }
+        })
+        
+        const candidates = result.candidates;
+        if (!candidates || candidates.length === 0 || !candidates[0].content || !candidates[0].content.parts || candidates[0].content.parts.length === 0) {
+            console.error("[Gemini] Invalid response structure or request was blocked.");
+            console.error("Full API Result:", JSON.stringify(result, null, 2));
+            throw new Error("Invalid response structure from Gemini.");
+        }
 
-        //Clean up the JSON array
+        const text = candidates[0].content.parts[0].text;
         const cleanedText = text.replace(/```json/g, '').replace(/```/g, '').trim();
-        const triviaArray = JSON.parse(cleanedText)
-
+        let triviaArray
+        try {
+            triviaArray = JSON.parse(cleanedText);
+        } catch (e) {
+            console.error("[Gemini] Failed to parse JSON. Raw text:", text);
+            throw new Error("Gemini did not return valid JSON.");
+        }
+        
         if (Array.isArray(triviaArray) && triviaArray.length === 6) {
             console.log("[Gemini] Successfully generated trivia array:", triviaArray);
             return triviaArray;
