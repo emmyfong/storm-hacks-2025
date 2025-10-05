@@ -24,13 +24,13 @@ export default function InputScreen() {
                         onChange={(e) => setUserInput(e.target.value)}
                         placeholder="Enter A Category"
                         maxLength={30}
-                        className="input-field"
+                        className="text-input"
                         autoFocus
                     />
                     <button 
                         onClick={handleSubmit}
                         disabled={!userInput.trim()}
-                        className="submit-button"
+                        className="join-button"
                     >
                         Submit
                     </button>

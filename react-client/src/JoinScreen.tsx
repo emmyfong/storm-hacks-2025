@@ -1,35 +1,35 @@
 import { useSocketContext } from './SocketContext.tsx';
+import './css/JoinScreen.css'
+import './css/main.css'
 
 export default function JoinScreen() {
     const { socket, lobbyCode, setLobbyCode, playerName, setPlayerName, joinLobby } = useSocketContext();
 
     return (
-        <div className="join-screen">
-            <div className="join-container">
+        <div className="main-screen">
+            <div className="input-container">
                 <h1>Join a Game</h1>
-                <p className="join-subtitle">Enter your details to join a lobby</p>
-
+                <label htmlFor="playerName">Your Name</label>
                 <div className="input-group">
-                    <label htmlFor="playerName">Your Name</label>
                     <input
                         id="playerName"
                         type="text"
                         placeholder="Enter your name"
                         value={playerName}
                         onChange={(e) => setPlayerName(e.target.value)}
-                        className="join-input"
+                        className="text-input"
                     />
                 </div>
 
+                <label htmlFor="lobbyCode">Lobby Code</label>
                 <div className="input-group">
-                    <label htmlFor="lobbyCode">Lobby Code</label>
                     <input
                         id="lobbyCode"
                         type="text"
                         placeholder="Enter lobby code"
                         value={lobbyCode}
                         onChange={(e) => setLobbyCode(e.target.value.toUpperCase())}
-                        className="join-input"
+                        className="text-input"
                     />
                 </div>
 
@@ -40,10 +40,6 @@ export default function JoinScreen() {
                 >
                     Join Lobby
                 </button>
-
-                {!socket && (
-                    <p className="connection-status">Connecting to server...</p>
-                )}
             </div>
         </div>
     );

@@ -1,0 +1,11 @@
+.join-screen {
+    background-image: url('../assets/Center_Background.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+}

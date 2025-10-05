@@ -8,11 +8,9 @@
 }
 
 .input-container {
-  background: rgba(139, 92, 246, 0.05);
-  border: 2px solid rgba(139, 92, 246, 0.2);
   border-radius: 20px;
-  padding: 40px;
-  max-width: 600px;
+  padding: 60px;
+  max-width: 500px;
   width: 100%;
   text-align: center;
 }
@@ -24,9 +22,8 @@
 }
 
 .input-group {
-  display: flex;
-  gap: 15px;
-  align-items: center;
+  margin-bottom: 2vh;
+  text-align: left;
 }
 
 .input-field {
