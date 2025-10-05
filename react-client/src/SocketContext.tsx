@@ -11,7 +11,7 @@ export interface SocketContextType {
     lobbyCode: string;
     setLobbyCode: (code: string) => void;
     players: Player[];
-    joinLobby: () => void;
+    joinLobby: (codeToJoin: string) => void;
     currentScreen: 'join' | 'lobby' | 'input' | 'choice' | 'reward' | 'endgame';
     setCurrentScreen: (screen: 'join' | 'lobby' | 'input' | 'choice' | 'reward' | 'endgame') => void;
     gameState: string;
@@ -19,6 +19,8 @@ export interface SocketContextType {
     triviaData: TriviaData | null;
     rewardData: RewardData | null;
     submitAnswer: (answerIndex: number) => void;
+    gameStateData: GameStateChangeData | null;
+    sendChatMessage: (message: string) => void;
 }
 
 // Create context for socket
@@ -37,6 +39,12 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     const [gameState, setGameState] = useState<string>('');
     const [triviaData, setTriviaData] = useState<TriviaData | null>(null);
     const [rewardData, setRewardData] = useState<RewardData | null>(null);
+    const [gameStateData, setGameStateData] = useState<GameStateChangeData | null>(null);
+    const sendChatMessage = (message: string) => {
+        if (socket && lobbyCode) {
+            socket.emit('sendChatMessage', { lobbyCode, message });
+        }
+    };
     
     useEffect(() => {
         // **Create the connection only once when the component mounts**
@@ -51,10 +59,12 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
             newSocket.emit('registerPlayer');
         });
 
-        newSocket.on('lobbyUpdate', (data: { players: Player[] }) => {
+        newSocket.on('lobbyUpdate', (data: { lobbyCode: string, players: Player[] }) => {
+            console.log('Lobby updated:', data);
+            setLobbyCode(data.lobbyCode);
             setPlayers(data.players);
             // Switch to lobby screen when players are received
-            if (data.players.length > 0) {
+            if (currentScreen === 'join') {
                 setCurrentScreen('lobby');
             }
         });
@@ -64,6 +74,8 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         });
 
         newSocket.on('gameStateChange', (data: GameStateChangeData) => {
+            //Store the entire game state data for potential future use
+            setGameStateData(data);
             console.log('Game state changed to:', data);
             setGameState(data.state);
             
@@ -81,15 +93,26 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
             }
         });
 
+        newSocket.on('disconnect', () => {
+            console.log('Disconnected from server');
+            alert('Connection to the server was lost. Please join again.');
+
+            //reset application state
+            setCurrentScreen('join');
+            setLobbyCode('');
+            setPlayers([]);
+            setGameState('');
+        });
+
         // **Clean up the connection when the component unmounts**
         return () => {
             newSocket.disconnect();
         };
     }, [serverUrl]);
 
-    const joinLobby = () => {
-        if (socket && playerName && lobbyCode) {
-            socket.emit('joinLobby', { lobbyCode: lobbyCode.toUpperCase(), playerName });
+    const joinLobby = (codeToJoin: string) => {
+        if (socket && playerName && codeToJoin) {
+            socket.emit('joinLobby', { lobbyCode: codeToJoin.toUpperCase(), playerName });
         }
     };
 
@@ -117,7 +140,9 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
             gameState, submitPrompt,
             triviaData,
             rewardData,
-            submitAnswer
+            submitAnswer,
+            gameStateData,
+            sendChatMessage
         }}>
             {children}
         </SocketContext.Provider>

@@ -17,7 +17,7 @@ export default function TriviaScreen() {
     const images = [buttonA, buttonB, buttonC, buttonD];
 
     const me = players.find(p => p.name === playerName);
-    const isAlive = me && me.health > 0;
+    const isAlive = me ? me.health > 0 : false;
 
     //resets component for next round
     useEffect(() => {
