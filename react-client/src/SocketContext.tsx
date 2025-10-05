@@ -20,6 +20,7 @@ export interface SocketContextType {
     rewardData: RewardData | null;
     submitAnswer: (answerIndex: number) => void;
     gameStateData: GameStateChangeData | null;
+    sendChatMessage: (message: string) => void;
 }
 
 // Create context for socket
@@ -39,6 +40,11 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     const [triviaData, setTriviaData] = useState<TriviaData | null>(null);
     const [rewardData, setRewardData] = useState<RewardData | null>(null);
     const [gameStateData, setGameStateData] = useState<GameStateChangeData | null>(null);
+    const sendChatMessage = (message: string) => {
+        if (socket && lobbyCode) {
+            socket.emit('sendChatMessage', { lobbyCode, message });
+        }
+    };
     
     useEffect(() => {
         // **Create the connection only once when the component mounts**
@@ -53,10 +59,12 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
             newSocket.emit('registerPlayer');
         });
 
-        newSocket.on('lobbyUpdate', (data: { players: Player[] }) => {
+        newSocket.on('lobbyUpdate', (data: { lobbyCode: string, players: Player[] }) => {
+            console.log('Lobby updated:', data);
+            setLobbyCode(data.lobbyCode);
             setPlayers(data.players);
             // Switch to lobby screen when players are received
-            if (currentScreen === 'join' && data.players.length > 0) {
+            if (currentScreen === 'join') {
                 setCurrentScreen('lobby');
             }
         });
@@ -133,7 +141,8 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
             triviaData,
             rewardData,
             submitAnswer,
-            gameStateData
+            gameStateData,
+            sendChatMessage
         }}>
             {children}
         </SocketContext.Provider>

@@ -54,7 +54,7 @@ export function initializeSocket(io) {
             const { lobby } = gameManager.startGame(lobbyCode);
             io.to(lobbyCode).emit('gameStateChange', { state: 'PROMPT', lobbyState: lobby.gameState, timer: PROMPT_PHASE_SECONDS });
 
-            const timerId = setTimeout(() => handlePromptPhaseEnd(lobbyCode), ROUND_TIMER_SECONDS * 1000);
+            const timerId = setTimeout(() => handlePromptPhaseEnd(lobbyCode), PROMPT_PHASE_SECONDS * 1000);
             gameManager.setLobbyTimer(lobbyCode, timerId); 
         });
 
@@ -79,6 +79,16 @@ export function initializeSocket(io) {
                 clearLobbyTimer(lobbyCode);
                 handleTriviaPhaseEnd(lobbyCode);
             }
+        });
+
+        socket.on('sendChatMessage', ({ lobbyCode, message }) => {
+            const lobby = gameManager.getLobby(lobbyCode);
+            if (!lobby) return;
+
+            const player = lobby.players.find(p => p.id === socket.id);
+            const playerName = player ? player.name : 'Spectator';
+
+            io.to(lobbyCode).emit('newChatMessage', { playerName, message });
         });
         //---------------------------
 
@@ -129,7 +139,7 @@ export function initializeSocket(io) {
                         question: lobby.gameState.question,
                         options: lobby.gameState.options,
                         players: lobby.players,
-                        timer: PROMPT_PHASE_SECONDS
+                        timer: ROUND_TIMER_SECONDS
                     });
                     const triviaTimerId = setTimeout(() => handleTriviaPhaseEnd(lobbyCode), ROUND_TIMER_SECONDS * 1000);
                     gameManager.setLobbyTimer(lobbyCode, triviaTimerId);
@@ -140,9 +150,9 @@ export function initializeSocket(io) {
                     io.to(lobbyCode).emit('gameStateChange', {
                         state: 'PROMPT',
                         players: lobby.players,
-                        timer: ROUND_TIMER_SECONDS
+                        timer: PROMPT_PHASE_SECONDS
                     });
-                    const promptTimerId = setTimeout(() => handlePromptPhaseEnd(lobbyCode), ROUND_TIMER_SECONDS * 1000);
+                    const promptTimerId = setTimeout(() => handlePromptPhaseEnd(lobbyCode), PROMPT_PHASE_SECONDS * 1000);
                     gameManager.setLobbyTimer(lobbyCode, promptTimerId);
                     break;
 
