@@ -1,11 +1,45 @@
-.join-screen {
-    background-image: url('../assets/Center_Background.png');
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-    background-position: center;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 60vh;
+.join-input:focus {
+  outline: none;
+  border-color: #8b5cf6;
+  background: rgba(139, 92, 246, 0.15);
+}
+
+.join-input::placeholder {
+  color: #a0a0a0;
+}
+
+.join-button {
+  font-family: inherit;
+  width: 100%;
+  padding: 4vh 6vw;
+  border: none;
+  color: #ffffff;
+  font-size: max(1.8vw, 18px);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 2vh;
+  min-height: 12vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  background-image: url('../assets/Button.png');
+  background-size: 50% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  filter: drop-shadow(3px 3px 4px rgba(0, 0, 0, 0.3));
+}
+
+.join-button:hover:not(:disabled) {
+  transform: scale(1.05); 
+  filter: drop-shadow(4px 4px 6px rgba(0, 0, 0, 0.4));
+}
+
+.join-button:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+  transform: none;
 }
