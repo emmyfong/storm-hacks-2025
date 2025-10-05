@@ -62,6 +62,25 @@ export function joinLobby(lobbyCode, playerId, playerName) {
     return { lobby: lobby };
 }
 
+export function getLobby(lobbyCode) {
+    return lobbies.get(lobbyCode);
+}
+
+export function setLobbyTimer(lobbyCode, timerId) {
+    const lobby = lobbies.get(lobbyCode);
+    if (lobby) {
+        lobby.gameState.timerId = timerId;
+    }
+}
+
+export function getAllPrompts(lobbyCode) {
+    const lobby = lobbies.get(lobbyCode);
+    if (lobby && lobby.gameState.promptSubmissions) {
+        return { prompts: lobby.gameState.promptSubmissions.map(p => p.promptText) };
+    }
+    return { prompts: [] };
+}
+
 //////////Game Flow Functions//////////
 //start a specific game type in the lobby
 export function startGame(lobbyCode, gameType = 'TRIVIA') {
@@ -106,18 +125,38 @@ export function createQuestionBank(lobbyCode, allGeneratedQuestions) {
     return { lobby };
 }
 
-//make the trivia bank
+//prepare the lobby for a new prompt phase when the question bank is empty
+
+function prepareNextPromptPhase(lobby) {
+    lobby.gameState.currentState = GAME_STATES.PROMPT;
+    lobby.gameState.promptSubmissions = []; // Clear old prompts
+    // Only reset the 'submitted' flag for players who are still alive
+    lobby.players.forEach(p => {
+        if (p.health > 0) {
+            p.submitted = false;
+        } else {
+            p.submitted = true; // Dead players are considered "submitted"
+        }
+    });
+    console.log(`[GameManager] Lobby ${lobby.lobbyCode}: Question bank empty. Starting new PROMPT phase.`);
+}
+
+//make the trivia question bank and set state to TRIVIA
 export function startNextTriviaRound(lobbyCode) {
     const lobby = lobbies.get(lobbyCode);
     if (!lobby) return;
 
-    // Check if there are any questions left
-    if (lobby.gameState.questionBank.length === 0) {
-        console.log(`[GameManager] Lobby ${lobbyCode}: No more questions in the bank.`);
-        // No questions left, so the game ends. Find the winner(s).
+    const alivePlayers = lobby.players.filter(p => p.health > 0);
+    if (alivePlayers.length <= 1) {
         lobby.gameState.currentState = GAME_STATES.ENDGAME;
-        const alivePlayers = lobby.players.filter(p => p.health > 0);
-        lobby.winner = alivePlayers.map(p => p.name).join(', ') || "No one";
+        lobby.winner = alivePlayers.length > 0 ? alivePlayers[0].name : "No one";
+        return { lobby };
+    }
+
+    // Check if there are any questions left
+    if (!lobby.gameState.questionBank || lobby.gameState.questionBank.length === 0) {
+        // Bank is empty, but game is not over Re-prompt
+        prepareNextPromptPhase(lobby);
         return { lobby };
     }
 

@@ -1,11 +1,7 @@
 import { useState, useEffect, createContext, useContext } from 'react';
 import { io, Socket } from 'socket.io-client';
+import type { Player, TriviaData, RewardData, GameStateChangeData } from './types';
 
-// Define a type for our player object
-export interface Player {
-    id: string;
-    name: string;
-}
 
 // Define a type for our socket context
 export interface SocketContextType {
@@ -16,9 +12,13 @@ export interface SocketContextType {
     setLobbyCode: (code: string) => void;
     players: Player[];
     joinLobby: () => void;
-    currentScreen: 'join' | 'lobby' | 'input';
-    setCurrentScreen: (screen: 'join' | 'lobby' | 'input') => void;
+    currentScreen: 'join' | 'lobby' | 'input' | 'choice' | 'reward' | 'endgame';
+    setCurrentScreen: (screen: 'join' | 'lobby' | 'input' | 'choice' | 'reward' | 'endgame') => void;
     gameState: string;
+    submitPrompt: (promptText: string) => void;
+    triviaData: TriviaData | null;
+    rewardData: RewardData | null;
+    submitAnswer: (answerIndex: number) => void;
 }
 
 // Create context for socket
@@ -33,8 +33,10 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     const [lobbyCode, setLobbyCode] = useState<string>('');
     const [playerName, setPlayerName] = useState<string>('');
     const [players, setPlayers] = useState<Player[]>([]);
-    const [currentScreen, setCurrentScreen] = useState<'join' | 'lobby' | 'input'>('join');
+    const [currentScreen, setCurrentScreen] = useState<'join' | 'lobby' | 'input' | 'choice' | 'reward' | 'endgame'>('join');
     const [gameState, setGameState] = useState<string>('');
+    const [triviaData, setTriviaData] = useState<TriviaData | null>(null);
+    const [rewardData, setRewardData] = useState<RewardData | null>(null);
     
     useEffect(() => {
         // **Create the connection only once when the component mounts**
@@ -61,13 +63,21 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
             alert(`Error: ${data.message}`);
         });
 
-        newSocket.on('gameStateChange', (data: { state: string }) => {
-            console.log('Game state changed to:', data.state);
+        newSocket.on('gameStateChange', (data: GameStateChangeData) => {
+            console.log('Game state changed to:', data);
             setGameState(data.state);
             
             // Switch to input screen when state is PROMPT
             if (data.state === 'PROMPT') {
                 setCurrentScreen('input');
+            } else if (data.state === 'TRIVIA') {
+                setTriviaData({ question: data.question, options: data.options });
+                setCurrentScreen('choice');
+            } else if (data.state === 'REWARD') {
+                setRewardData({ results: data.results, solutionIndex: data.solutionIndex });
+                setCurrentScreen('reward');
+            } else if (data.state === 'ENDGAME') {
+                setCurrentScreen('endgame');
             }
         });
 
@@ -75,7 +85,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         return () => {
             newSocket.disconnect();
         };
-    }, []);
+    }, [serverUrl, players]);
 
     const joinLobby = () => {
         if (socket && playerName && lobbyCode) {
@@ -83,13 +93,38 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
+    const submitPrompt = (promptText: string) => {
+        if (socket && lobbyCode) {
+            socket.emit('submitPrompt', { lobbyCode, promptText });
+        }
+    };
+
+    const submitAnswer = (answerIndex: number) => {
+        if (socket && lobbyCode) {
+            socket.emit('submitAnswer', { lobbyCode, answerIndex });
+        }
+    };
+
     return (
-        <SocketContext.Provider value={{ socket, playerName, setPlayerName, lobbyCode, setLobbyCode, players, joinLobby, currentScreen, setCurrentScreen, gameState }}>
+        <SocketContext.Provider value={{ 
+            socket, 
+            playerName, 
+            setPlayerName, 
+            lobbyCode, setLobbyCode, 
+            players, 
+            joinLobby, 
+            currentScreen, setCurrentScreen, 
+            gameState, submitPrompt,
+            triviaData,
+            rewardData,
+            submitAnswer
+        }}>
             {children}
         </SocketContext.Provider>
     );
 }
 
+/* eslint-disable react-refresh/only-export-components */
 // Hook to use context
 export const useSocketContext = () => {
     const context = useContext(SocketContext);
