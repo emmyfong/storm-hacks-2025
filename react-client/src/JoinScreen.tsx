@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useSocketContext } from './SocketContext.tsx';
+import './css/JoinScreen.css'
 import './css/main.css'
 
 export default function JoinScreen() {
@@ -38,9 +39,9 @@ export default function JoinScreen() {
                 </div>
 
                 <button 
-                    onClick={joinLobby} 
-                    disabled={!socket || !playerName || !lobbyCode}
-
+                    onClick={handleJoin} 
+                    disabled={!socket || !playerName || !inputCode}
+                    className="join-button"
                 >
                     Join Lobby
                 </button>
