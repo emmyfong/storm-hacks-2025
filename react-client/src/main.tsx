@@ -3,11 +3,13 @@ import { createRoot } from 'react-dom/client'
 import './css/main.css'
 import { SocketProvider } from './SocketContext'
 import App from './App'
+import Chat from "./Chat";
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <SocketProvider>
       <App />
+      <Chat />
     </SocketProvider>
   </StrictMode>,
 )
