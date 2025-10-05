@@ -11,7 +11,7 @@ export interface SocketContextType {
     lobbyCode: string;
     setLobbyCode: (code: string) => void;
     players: Player[];
-    joinLobby: () => void;
+    joinLobby: (codeToJoin: string) => void;
     currentScreen: 'join' | 'lobby' | 'input' | 'choice' | 'reward' | 'endgame';
     setCurrentScreen: (screen: 'join' | 'lobby' | 'input' | 'choice' | 'reward' | 'endgame') => void;
     gameState: string;
@@ -56,7 +56,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         newSocket.on('lobbyUpdate', (data: { players: Player[] }) => {
             setPlayers(data.players);
             // Switch to lobby screen when players are received
-            if (data.players.length > 0) {
+            if (currentScreen === 'join' && data.players.length > 0) {
                 setCurrentScreen('lobby');
             }
         });
@@ -85,15 +85,26 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
             }
         });
 
+        newSocket.on('disconnect', () => {
+            console.log('Disconnected from server');
+            alert('Connection to the server was lost. Please join again.');
+
+            //reset application state
+            setCurrentScreen('join');
+            setLobbyCode('');
+            setPlayers([]);
+            setGameState('');
+        });
+
         // **Clean up the connection when the component unmounts**
         return () => {
             newSocket.disconnect();
         };
     }, [serverUrl]);
 
-    const joinLobby = () => {
-        if (socket && playerName && lobbyCode) {
-            socket.emit('joinLobby', { lobbyCode: lobbyCode.toUpperCase(), playerName });
+    const joinLobby = (codeToJoin: string) => {
+        if (socket && playerName && codeToJoin) {
+            socket.emit('joinLobby', { lobbyCode: codeToJoin.toUpperCase(), playerName });
         }
     };
 
