@@ -32,7 +32,7 @@ body {
 
 .main-content {
   width: 50vw;
-  height: 100vh;
+  height: calc(100vh - 60px);
   min-width: 400px;
   min-height: 500px;
   display: flex;
