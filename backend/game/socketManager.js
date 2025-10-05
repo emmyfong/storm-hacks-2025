@@ -1,10 +1,19 @@
 //Handles all socket communication with clients
 import * as gameManager from './gameManager.js';
+import { generateTriviaQuestion } from '../services/gemini.js';
 
 const ROUND_TIMER_SECONDS = 20;
 const REWARD_PHASE_SECONDS = 10;
 
 export function initializeSocket(io) {
+    const clearLobbyTimer = (lobbyCode) => {
+        const lobby = gameManager.getLobby(lobbyCode);
+        if (lobby && lobby.gameState.timerId) {
+            clearTimeout(lobby.gameState.timerId);
+            gameManager.setLobbyTimer(lobbyCode, null); // Clear the ID in the state
+        }
+    };
+
     io.on("connection", (socket) => {
         console.log(`New client connected: ${socket.id}`);
 
@@ -79,14 +88,30 @@ export function initializeSocket(io) {
 
             const { prompts } = gameManager.getAllPrompts(lobbyCode);
             
-            // Using placeholder data
-            const placeholderQuestions = [
-                ["What is the capital of Canada?", "Toronto", "Vancouver", "Ottawa", "Montreal", "Ottawa"],
-                ["Which planet is known as the Red Planet?", "Venus", "Mars", "Jupiter", "Saturn", "Mars"],
-                ["What is 2 + 2?", "3", "4", "5", "6", "4"]
-            ];
+            if (prompts.length === 0) {
+                // Handle case where no one submitted a prompt
+                console.log(`Lobby ${lobbyCode}: No prompts submitted, ending game.`);
+                io.to(lobbyCode).emit('gameStateChange', { state: 'ENDGAME', winner: 'No one submitted prompts!' });
+                return;
+            }
+
+            console.log(`Lobby ${lobbyCode}: Sending ${prompts.length} prompts to Gemini.`);
+
+            const questionPromises = prompts.map(prompt => generateTriviaQuestion(prompt));
             
-            gameManager.createQuestionBank(lobbyCode, placeholderQuestions);
+            // Wait for all API calls to complete
+            const generatedQuestions = await Promise.all(questionPromises);
+
+            // Filter out any failed API calls (which return null)
+            const validQuestions = generatedQuestions.filter(q => q !== null);
+
+            if (validQuestions.length === 0) {
+                console.log(`Lobby ${lobbyCode}: Gemini failed to generate any questions.`);
+                io.to(lobbyCode).emit('gameStateChange', { state: 'ENDGAME', winner: 'Failed to generate questions!' });
+                return;
+            }
+
+            gameManager.createQuestionBank(lobbyCode, validQuestions);
             startNextRound(lobbyCode);
         }
 
