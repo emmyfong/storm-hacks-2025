@@ -1,11 +1,26 @@
 import { useSocketContext } from './SocketContext.tsx';
 import './css/Lobby.css';
+import './css/main.css';
+
+/*export interface Player {
+    id: string;
+    name: string;
+}*/
 
 export default function Lobby() {
     const { lobbyCode, playerName, players, setCurrentScreen } = useSocketContext();
+    /*const {setCurrentScreen } = useSocketContext();
+    const lobbyCode: string = '1234';
+    const playerName: string = 'Keira';
+    const players: Player[] = [
+        { id: '1', name: 'Keira' },
+        { id: '2', name: 'Emmy' },
+        { id: '3', name: 'Sophia' },
+        { id: '4', name: 'Evan' },
+      ];*/
 
     return (
-        <div className="lobby-screen">
+        <div className="main-screen">
             <div className="lobby-container">
                 <h1>Lobby: {lobbyCode}</h1>
                 
