@@ -110,7 +110,7 @@ const renderTriviaContent = () => {
       const myResult = rewardData.results.find(r => r.playerName === playerName);
       const resultText = myResult?.isCorrect ? "Correct!" : "Incorrect!";
       return (
-          <div className="main-screen">
+          <div className="result-screen">
               <h2 className="trivia-question">{triviaData.question}</h2>
               <h1 className={`result-text ${showResultText ? 'visible' : ''}`}>{resultText}</h1>
               <p>The correct answer was: {triviaData.options[rewardData.solutionIndex]}</p>
