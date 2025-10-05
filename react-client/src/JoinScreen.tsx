@@ -17,6 +17,7 @@ export default function JoinScreen() {
             <div className="input-container">
                 <h1>Join a Game</h1>
                 <div className="input-group">
+                    <label htmlFor="playerName" className="input-label">Player Name</label>
                     <input
                         id="playerName"
                         type="text"
@@ -28,6 +29,7 @@ export default function JoinScreen() {
                 </div>
 
                 <div className="input-group">
+                    <label htmlFor="lobbyCode" className="input-label">Lobby Code</label>
                     <input
                         id="lobbyCode"
                         type="text"

@@ -4,7 +4,7 @@ import { generateTriviaQuestion } from '../services/gemini.js';
 
 const ROUND_TIMER_SECONDS = 60;
 const PROMPT_PHASE_SECONDS = 60;
-const REWARD_PHASE_SECONDS = 20;
+const REWARD_PHASE_SECONDS = 10;
 
 export function initializeSocket(io) {
     const clearLobbyTimer = (lobbyCode) => {

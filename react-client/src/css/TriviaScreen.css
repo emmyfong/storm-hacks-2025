@@ -1,55 +1,75 @@
 /* TriviaScreen.css */
 
 .trivia-layout {
-  padding: 6rem 0.5rem 1rem 1rem;
+  padding: 0;
   color: #fff;
+  min-height: calc(100vh - 50px); /* 50px navbar */
+  height: calc(100vh - 50px);
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 60px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
 }
 
 .result-screen {
-  width: 500px;
-  height: 800px;
-  max-width: 500px;
+  width: 100%;
+  height: calc(100vh - 50px);
+  max-width: 100vw;
+  max-height: calc(100vh - 50px);
   background-image: url('../assets/Center_Background.png');
-  background-size: 100% 100%;
+  background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 60vh;
+  overflow: hidden;
+  box-sizing: border-box;
+  position: relative;
 }
 
 .trivia-question {
-  margin: 0rem 0;
+  margin: 0.5rem 0;
   color: white;
-  padding-left: 10%;
-  padding-right: 10%;
-  font-size: 2vh;
+  padding-left: 5vw;
+  padding-right: 5vw;
+  font-size: min(4vw, 24px);
   text-align: center;
+  word-break: break-word;
+  max-width: 90%;
 }
 
 .trivia-buttons {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 0.8rem;
   width: 100%;
+  max-width: 95vw;
+  padding: 0.5rem;
 }
 
 .trivia-button {
   position: relative;
-  font-size: 2vh;
+  font-size: min(3.5vw, 20px);
   background-color: transparent;
   border: none;
   border-radius: 10px;
-  height: 80px;
+  height: min(12vw, 60px);
+  min-height: 40px;
   width: 100%;
-  max-width: 380px;
+  max-width: min(380px, 90vw);
   aspect-ratio: 5 / 1.5;
   display: flex;
   justify-content: right;
-  align-items: right;
+  align-items: center;
   padding-left: 0;
   transition: transform 0.2s;
   box-sizing: border-box;
@@ -58,6 +78,7 @@
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
+  margin: 0 auto;
 }
 
 .trivia-button:disabled {
@@ -65,12 +86,13 @@
 }
 
 .trivia-button span {
-  padding: 0.4rem 0rem;
+  padding: 0.4rem 0.6rem;
   border-radius: 5px;
   font-weight: bold;
   display: inline-block;
   text-align: right;
   color: black;
+  font-size: min(3.5vw, 20px);
 }
 
 .trivia-button:hover:not(:disabled) {
@@ -78,11 +100,54 @@
 }
 
 .result-text {
-    opacity: 0;
-    transform: scale(0.8);
-    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
 }
+
 .result-text.visible {
-    opacity: 1;
-    transform: scale(1);
+  opacity: 1;
+  transform: scale(1);
+}
+
+@media (max-width: 768px) {
+  .trivia-layout {
+    padding: 0;
+    top: 50px;
+    touch-action: none;
+  }
+  
+  .result-screen {
+    padding: 0.5rem;
+    touch-action: none;
+  }
+  
+  .trivia-buttons {
+    gap: 0.6rem;
+    padding: 0.3rem;
+  }
+
+  .trivia-button {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@media (max-width: 480px) {
+  .trivia-layout {
+    padding: 0;
+  }
+  
+  .result-screen {
+    padding: 0.3rem;
+  }
+  
+  .trivia-buttons {
+    gap: 0.4rem;
+    max-width: 98vw;
+  }
+  
+  .trivia-button {
+    min-height: 36px;
+  }
 }
