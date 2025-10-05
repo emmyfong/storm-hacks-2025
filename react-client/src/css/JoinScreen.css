@@ -26,6 +26,13 @@
     .input-container {
         padding: min(60px, 15vw);
     }
+
+    .main-screen {
+        transform: none;
+        margin: 1rem auto;
+        position: relative;
+        left: auto;
+    }
 }
 
 @media (max-width: 480px) {

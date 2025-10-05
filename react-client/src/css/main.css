@@ -55,9 +55,11 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 60vh;
-  margin: 1rem 0;
+  margin: 1rem auto;
   position: relative;
   -webkit-overflow-scrolling: touch;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .input-container {

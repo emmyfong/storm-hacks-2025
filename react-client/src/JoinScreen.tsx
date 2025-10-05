@@ -9,10 +9,26 @@ export default function JoinScreen() {
 
     // Function to re-center the screen
     const recenterView = () => {
-        window.scrollTo({
-            top: 0,
-            left: 0,
-            behavior: 'smooth'
+        // Force a layout recalculation
+        requestAnimationFrame(() => {
+            // Center horizontally and vertically
+            const screenWidth = window.innerWidth;
+            window.scrollTo({
+                top: 0,
+                left: screenWidth / 2,
+                behavior: 'smooth'
+            });
+            // Additional check to ensure we're centered after a short delay
+            setTimeout(() => {
+                const container = document.querySelector('.main-screen');
+                if (container) {
+                    container.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center',
+                        inline: 'center'
+                    });
+                }
+            }, 100);
         });
     };
 
