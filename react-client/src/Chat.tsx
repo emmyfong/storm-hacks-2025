@@ -4,20 +4,10 @@ import './css/Chat.css'
 export default function ChatModal() {
     const [modal, setChatModal] = useState(false);
     const [message, setMessage] = useState(""); // input text
-    const [messages, setMessages] = useState<string[]>([]); // message list
 
     const toggleModal = () => {
         setChatModal(!modal)
     }
-
-    // Handle sending message
-    const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (message.trim() === "") return;
-
-    setMessages((prev) => [...prev, message]);
-    setMessage("");
-  };
 
     return (
         <>
@@ -31,7 +21,7 @@ export default function ChatModal() {
               <div className="modal-content">
                 <h2>Talk</h2>
     
-                <form onSubmit={handleSubmit} className="chat-form">
+                <form className="chat-form">
                   <input
                     type="text"
                     className="chat-input"
