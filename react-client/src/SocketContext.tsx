@@ -19,6 +19,7 @@ export interface SocketContextType {
     triviaData: TriviaData | null;
     rewardData: RewardData | null;
     submitAnswer: (answerIndex: number) => void;
+    gameStateData: GameStateChangeData | null;
 }
 
 // Create context for socket
@@ -37,6 +38,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     const [gameState, setGameState] = useState<string>('');
     const [triviaData, setTriviaData] = useState<TriviaData | null>(null);
     const [rewardData, setRewardData] = useState<RewardData | null>(null);
+    const [gameStateData, setGameStateData] = useState<GameStateChangeData | null>(null);
     
     useEffect(() => {
         // **Create the connection only once when the component mounts**
@@ -64,6 +66,8 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         });
 
         newSocket.on('gameStateChange', (data: GameStateChangeData) => {
+            //Store the entire game state data for potential future use
+            setGameStateData(data);
             console.log('Game state changed to:', data);
             setGameState(data.state);
             
@@ -117,7 +121,8 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
             gameState, submitPrompt,
             triviaData,
             rewardData,
-            submitAnswer
+            submitAnswer,
+            gameStateData
         }}>
             {children}
         </SocketContext.Provider>
