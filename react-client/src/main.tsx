@@ -3,7 +3,6 @@ import { createRoot } from 'react-dom/client'
 import './css/main.css'
 import { SocketProvider } from './SocketContext'
 import App from './App'
-import Lobby from './Lobby.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
